@@ -31,7 +31,7 @@ class TestAPI:
     def test_schedule_api(self):
         request_body = {"processor_group_name": "Run Latest Code aws", "scheduled_at": "0 49 16 * * ?"}
         response = requests.post(config.get('config', 'base_url') + "/api/spec/schedule", json=request_body)
-        assert response.status_code == 202
+        assert response.status_code == 200
 
     def test_adapters(self):
         #self.logger.info("********TC testing Ended***********")
