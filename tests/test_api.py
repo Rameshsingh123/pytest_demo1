@@ -1,39 +1,11 @@
-# import pytest
-# from pages.api_page import ExampleAPIPage
-#
-#
-# @pytest.fixture
-# def api_page():
-#     base_url = "https://reqres.in/api/users?page=2"
-#     return ExampleAPIPage(base_url)
-#
-#
-# def test_get_example_data(api_page):
-#     response = api_page.get_data()
-#     assert response.status_code == 200
-#     assert "data" in response.json()
-#     response_data = response.json()
-#
-#     email_to_find = 'michael.lawson@reqres.in'
-#     assert any(entry['email'] == email_to_find for entry in response_data['data'])
-#
-#     print(response_data)
-#     print(email_to_find)
-#
-#
-# def test_post_example_data(api_page):
-#     data = {"key": "value"}
-#     # headers = {"Authorization": "Bearer QpwL5tke4Pnpja7X4"}
-#     #
-#     # response = api_page.post_data(data, headers)
-#     #
-#     # assert response.status_code == 201
-#     # assert response.json()["success"] is True
-
-
 import configparser
+import logging
+
 import pytest
 import requests
+
+from utilities import CustomLogger
+from utilities.readproperties import ReadConfig
 
 config = configparser.RawConfigParser()
 config.read('/home/ramesh/PycharmProjects/pytest_demo1/config.ini')
@@ -46,21 +18,22 @@ def api_page():
     return ExampleAPIPage(base_url)
 
 
-def test_jwt_token(api_page):
-    response = requests.get(config.get('config', 'base_url') + "/api/ingestion/generatejwt")
-    assert response.status_code == 200
+class TestAPI:
+    logger = CustomLogger.setup_logger('Login', ReadConfig.get_logs_directory() + "/Test_login.log",
+                                       level=logging.DEBUG)
 
+    def test_jwt_token(self):
+        self.logger.info("********TC1 testing of jwt token Started***********")
+        response = requests.get(config.get('config', 'base_url') + "/api/ingestion/generatejwt")
+        assert response.status_code == 200
 
-def test_dimension_api():
-    response = requests.get(config.get('config', 'base_url') + "/api/new_programs")
+    def test_schedule_api(self):
+        request_body = {"processor_group_name": "Run Latest Code aws", "scheduled_at": "0 49 16 * * ?"}
+        response = requests.post(config.get('config', 'base_url') + "/api/spec/schedule", json=request_body)
+        assert response.status_code == 200
 
-    # response = api_page.get_data()
-    # assert response.status_code == 200
-    # assert "data" in response.json()
-    # response_data = response.json()
-    #
-    # email_to_find = 'michael.lawson@reqres.in'
-    # assert any(entry['email'] == email_to_find for entry in response_data['data'])
-    #
-    # print(response_data)
-    # print(email_to_find)
+    def test_adapters(self):
+        self.logger.info("********TC testing Ended***********")
+        request_body = {"processor_group_name": "Run_adapters", "scheduled_at": '0 39 16 * * ?'}
+        response = requests.post(config.get('config', 'base_url') + "/api/spec/schedule", json=request_body)
+        assert response.status_code == 200
