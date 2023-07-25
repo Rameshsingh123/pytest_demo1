@@ -24,3 +24,19 @@ jobs:
         pip install pytest requests
     - name: Run api on pytest
       run: pytest -v -s tests/test_api.py
+
+    - name: Send Email Report
+      uses: actions/upload-artifact@v2
+      with:
+        name: Test Report
+        path: ./reports/loginpage.html
+#
+    - name: Configure Gmail and Send Email
+      env:
+        GMAIL_USERNAME: ${{secrets.GMAIL_USERNAME}}
+        GMAIL_PASSWORD: ${{secrets.GMAIL_PASSWORD}}
+
+        RECIPIENT_EMAIL: aditya.g@tibilsolutions.com  # Replace with the recipient's email
+
+      run: |
+        python reports/send_email_script.py $GMAIL_USERNAME $GMAIL_PASSWORD $RECIPIENT_EMAIL
