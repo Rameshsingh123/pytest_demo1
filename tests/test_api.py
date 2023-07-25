@@ -9,7 +9,7 @@ import requests
 # from Utilities.readproperties import ReadConfig
 
 config = configparser.RawConfigParser()
-config.read('/home/ramesh/PycharmProjects/pytest_demo1/config.ini')
+config.read('pytest_demo1/config.ini')
 from pages.api_page import ExampleAPIPage
 
 
