@@ -1,7 +1,6 @@
 import logging
 from os import remove
 from os.path import exists
-from utilities import CustomLogger
 
 
 """Function returns the logger object"""

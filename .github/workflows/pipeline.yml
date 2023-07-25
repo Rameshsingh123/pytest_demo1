@@ -23,4 +23,4 @@ jobs:
         pip install pytest-html
         pip install pytest requests
     - name: Run api on pytest
-      run: pytest tests/test_api.py
+      run: pytest -v -s tests/test_api.py
